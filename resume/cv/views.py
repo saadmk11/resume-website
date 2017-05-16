@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 from django.contrib import messages
 from .forms import PersonalInfoForm, WorkExperienceForm, EducationForm, SkillsForm
@@ -23,9 +23,8 @@ def details(request):
 	return render(request, "cv/details.html", context)
 
 
-
-
 # creates new CV
+
 def create(request):
 	title = "Create CV"
 	personalinfoform = PersonalInfoForm(request.POST or None, request.FILES or None)
@@ -46,6 +45,8 @@ def create(request):
 		skills = skillsform.save(commit=False)
 		skills.personal_info = instance
 		skills.save()
+		return redirect("details")
+
 
 	context = {'personalinfoform': personalinfoform,
 			   'workexperienceform': workexperienceform,
