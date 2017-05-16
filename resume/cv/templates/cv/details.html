@@ -1,0 +1,52 @@
+
+<h2>Personal information</h2><br>
+
+{% for obj in personalinfo %}
+
+	{{ obj.first_name }}
+	{{ obj.last_name }}<br>
+	{{ obj.birth_day }}<br>
+	{{ obj.gender }}<br>
+	{{ obj.nationality }}<br>
+	{{ obj.phone_no }}<br>
+	{{ obj.email }}<br>
+	{{ obj.website }}<br>
+	{{ obj.address }}<br>
+	{{ obj.bio }}<br>
+	{{ obj.picture }}<br><br>
+		
+	{% endfor %}
+
+
+<h2>Work Experiance</h2><br>
+
+{% for obj in workexperience_detail %}
+
+	{{ obj.company_name }}<br>
+	{{ obj.job_title }}<br>
+	{{ obj.joining_year }}<br>
+	{{ obj.job_description }}<br><br>
+
+	{% endfor %}
+
+
+<h2>Educational Qualification</h2><br>
+
+{% for obj in education_detail %}
+
+	{{ obj.institute_name }}<br>
+	{{ obj.subject }}<br>
+	{{ obj.year }}<br>
+	{{ obj.description }}<br><br>
+
+	{% endfor %}
+
+
+<h2>Skills</h2><br>
+
+{% for obj in skills_detail %}
+
+	{{ obj.language_skills }}<br>
+	{{ obj.other_skills }}<br><br>
+
+	{% endfor %}

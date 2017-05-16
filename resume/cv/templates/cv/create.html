@@ -1,0 +1,14 @@
+
+
+<h1>{{ title }}</h1>
+
+
+<form method="POST" action="" enctype='multipart/form-data'>
+	{% csrf_token %}
+	{{ personalinfoform.as_p }}
+	{{ workexperienceform.as_p }}
+	{{ educationform.as_p }}
+	{{ skillsform.as_p }}
+	<input type="submit" value='{{ title }}'>
+</form>
+
