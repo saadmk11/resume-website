@@ -7,8 +7,9 @@ urlpatterns = [
     # url(r'^$', 'resume.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    #url(r'^$/', ),zzz
+    #url(r'^$/', ),
     url(r'^$', views.details, name='details'),
     url(r'^create/', views.create, name='create'),
-    url(r'^(?P<id>\d+)/update/', views.update, name='update'),
+    url(r'^(?P<username>\w+)/$', views.view_cv, name='view_cv'),
+    url(r'^(?P<username>\w+)/update/', views.update, name='update'),
 ]
