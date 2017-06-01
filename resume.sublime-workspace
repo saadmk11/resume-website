@@ -83,7 +83,7 @@
 			"file": "resume/cv/views.py",
 			"settings":
 			{
-				"buffer_size": 4199,
+				"buffer_size": 4249,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -94,14 +94,6 @@
 			{
 				"buffer_size": 437,
 				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "resume/cv/templates/cv/create.html",
-			"settings":
-			{
-				"buffer_size": 265,
 				"line_ending": "Unix"
 			}
 		}
@@ -147,13 +139,16 @@
 	],
 	"file_history":
 	[
-		"/home/saad/pass/src/pass_save/views.py",
+		"/home/saad/website/resume/cv/templates/cv/create.html",
 		"/home/saad/website/resume/cv/models.py",
+		"/home/saad/website/resume/cv/urls.py",
+		"/home/saad/website/resume/cv/views.py",
+		"/home/saad/Desktop/index.htm",
+		"/home/saad/pass/src/pass_save/views.py",
 		"/home/saad/website/resume/resume/urls.py",
 		"/home/saad/website/resume/accounts/views.py",
 		"/home/saad/website/resume/cv/forms.py",
 		"/home/saad/website/resume/accounts/forms.py",
-		"/home/saad/website/resume/cv/views.py",
 		"/home/saad/website/resume/templates/accounts/login_form.html",
 		"/home/saad/website/resume/templates/accounts/register_form.html",
 		"/home/saad/website/resume/resume/settings.py",
@@ -162,8 +157,6 @@
 		"/home/saad/website/resume/accounts/urls.py",
 		"/home/saad/website/resume/cv/tests.py",
 		"/home/saad/website/resume/cv/templates/cv/details.html",
-		"/home/saad/website/resume/cv/urls.py",
-		"/home/saad/website/resume/cv/templates/cv/create.html",
 		"/home/saad/website/resume/cv/admin.py",
 		"/home/saad/website/.gitignore",
 		"/home/saad/pass/src/pass_save/templates/pass_save/create.html",
@@ -223,7 +216,7 @@
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 23.0
 	},
 	"find_in_files":
 	{
@@ -278,8 +271,8 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								245,
+								245
 							]
 						],
 						"settings":
@@ -291,7 +284,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -300,15 +293,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4199,
+						"buffer_size": 4249,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2787,
-								2787
+								1591,
+								1591
 							]
 						],
 						"settings":
@@ -317,7 +310,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1035.0,
+						"translation.y": 270.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -336,41 +329,13 @@
 						"selection":
 						[
 							[
-								437,
-								437
+								262,
+								262
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/Python/Python.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "resume/cv/templates/cv/create.html",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 265,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,

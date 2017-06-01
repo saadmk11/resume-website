@@ -1,13 +1,17 @@
 
 
-<h1>{{ title }}</h1>
+<h1>{{ title }}</h1><br>
 
 
 <form method="POST" action="" enctype='multipart/form-data'>
 	{% csrf_token %}
-	{{ personalinfoform.as_p }}
-	{{ workexperienceform.as_p }}
-	{{ educationform.as_p }}
+	<h2>Personal information</h2>
+	{{ personalinfoform.as_p }}<br>
+	<h2>Work Experiance</h2>
+	{{ workexperienceform.as_p }}<br>
+	<h2>Educational Qualification</h2>
+	{{ educationform.as_p }}<br>
+	<h2>Skills</h2>
 	{{ skillsform.as_p }}
 	<input type="submit" value='{{ title }}'>
 </form>

@@ -1,31 +1,34 @@
+# from django.contrib import messages
 from django.contrib.auth.models import User
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import *
-from django.contrib import messages
-from .forms import PersonalInfoForm, WorkExperienceForm, EducationForm, SkillsForm
 from django.http import Http404
-# Create your views here.
+from django.shortcuts import render, get_object_or_404, redirect
+from .forms import PersonalInfoForm, WorkExperienceForm, EducationForm, SkillsForm
+from .models import *
 
 
+# Shows the logged in users CV in homepage
 def details(request):
-	title = "Resume"
-	user = request.user
-	personalinfo = PersonalInfo.objects.filter(user=user)
-	workexperience_detail = WorkExperience.objects.filter(personal_info=personalinfo)
-	education_detail = Education.objects.filter(personal_info=personalinfo)
-	skills_detail = Skills.objects.filter(personal_info=personalinfo)
+	if not request.user.is_authenticated():
+		return redirect("login")
+	else:
+		title = "Resume"
+		user = request.user
+		personalinfo = PersonalInfo.objects.filter(user=user)
+		workexperience_detail = WorkExperience.objects.filter(personal_info=personalinfo)
+		education_detail = Education.objects.filter(personal_info=personalinfo)
+		skills_detail = Skills.objects.filter(personal_info=personalinfo)
 
-	context = {'personalinfo': personalinfo,
-			   'workexperience_detail': workexperience_detail,
-			   'education_detail': education_detail,
-			   'skills_detail': skills_detail,
-			   'title': title
-				}
+		context = {'personalinfo': personalinfo,
+				   'workexperience_detail': workexperience_detail,
+				   'education_detail': education_detail,
+				   'skills_detail': skills_detail,
+				   'title': title
+					}
 
-	return render(request, "cv/details.html", context)
+		return render(request, "cv/details.html", context)
 
 
-# View CV
+# shows CV form the users from URL
 def view_cv(request, username):
 	title = "Resume"
 	user = User.objects.get(username=username)
@@ -47,36 +50,41 @@ def view_cv(request, username):
 # creates new CV
 
 def create(request):
-	title = "Create CV"
-	personalinfoform = PersonalInfoForm(request.POST or None, request.FILES or None)
-	workexperienceform = WorkExperienceForm(request.POST or None)
-	educationform = EducationForm(request.POST or None)
-	skillsform = SkillsForm(request.POST or None)
+	if not request.user.groups.filter(name='new user').exists():
+		raise Http404
+	else:
+		title = "Create CV"
+		personalinfoform = PersonalInfoForm(request.POST or None, request.FILES or None)
+		workexperienceform = WorkExperienceForm(request.POST or None)
+		educationform = EducationForm(request.POST or None)
+		skillsform = SkillsForm(request.POST or None)
 
-	if personalinfoform.is_valid() and workexperienceform.is_valid() and educationform.is_valid() and skillsform.is_valid():
-		instance = personalinfoform.save(commit=False)
-		instance.user = request.user
-		instance.save()
-		workexperience = workexperienceform.save(commit=False)
-		workexperience.personal_info = instance
-		workexperience.save()
-		education = educationform.save(commit=False)
-		education.personal_info = instance
-		education.save()
-		skills = skillsform.save(commit=False)
-		skills.personal_info = instance
-		skills.save()
-		return redirect("details")
+		if personalinfoform.is_valid() and workexperienceform.is_valid() and educationform.is_valid() and skillsform.is_valid():
+			instance = personalinfoform.save(commit=False)
+			instance.user = request.user
+			instance.save()
+			workexperience = workexperienceform.save(commit=False)
+			workexperience.personal_info = instance
+			workexperience.save()
+			education = educationform.save(commit=False)
+			education.personal_info = instance
+			education.save()
+			skills = skillsform.save(commit=False)
+			skills.personal_info = instance
+			skills.save()
+			user = request.user
+			user.groups.clear()
+			return redirect("details")
 
 
-	context = {'personalinfoform': personalinfoform,
-			   'workexperienceform': workexperienceform,
-			   'educationform': educationform,
-			   'skillsform': skillsform,
-			   'title': title
-				}
+		context = {'personalinfoform': personalinfoform,
+				   'workexperienceform': workexperienceform,
+				   'educationform': educationform,
+				   'skillsform': skillsform,
+				   'title': title
+					}
 
-	return render(request, "cv/create.html", context)
+		return render(request, "cv/create.html", context)
 
 
 # Updates CV
@@ -110,6 +118,7 @@ def update(request, username=None):
 			skills = skillsform.save(commit=False)
 			skills.personal_info = instance
 			skills.save()
+			return redirect("details")
 
 		context = {'personalinfoform': personalinfoform,
 				   'workexperienceform': workexperienceform,
@@ -119,12 +128,3 @@ def update(request, username=None):
 					}
 
 		return render(request, "cv/create.html", context)
-
-
-
-
-
-
-
-
-

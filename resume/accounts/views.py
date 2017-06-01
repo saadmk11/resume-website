@@ -6,6 +6,7 @@ from django.contrib.auth import (
     )
 from django.shortcuts import render, redirect
 from .forms import UserLoginForm, UserRegistrationForm
+from django.contrib.auth.models import Group
 
 # Create your views here.
 
@@ -32,6 +33,7 @@ def register_view(request):
 		password = form.cleaned_data.get("password")
 		user.set_password(password)
 		user.save()
+		user.groups.add(Group.objects.get(name='new user'))
 		new_user = authenticate(username=user.username, password=password)
 		login(request, new_user)
 		return redirect("create")
@@ -44,3 +46,4 @@ def register_view(request):
 def logout_view(request):
 	logout(request)
 	return redirect("login")
+	
