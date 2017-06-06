@@ -1,0 +1,14 @@
+            <form class='' method='POST' action='{% url "register" %}'>{% csrf_token %}
+              <div class=''>
+                  <input type='text' class='' name='username' placeholder='Username' /> 
+                  <span class="helptext">Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.</span></p>
+              </div>
+              <div class=''>
+                  <input type='password' class='' name='password' placeholder='Password' />
+              </div>
+              <div class=''>
+                  <input type='password' class='' name='confirm_password' placeholder='Confirm Password' />
+              </div>
+              <button type='submit' class=''>register</button> Already Have an Account <a href="{% url 'login' %}">Login</a> 
+          </form>
+
