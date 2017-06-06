@@ -7,6 +7,7 @@ from django.contrib.auth import (
 from django.shortcuts import render, redirect
 from .forms import UserLoginForm, UserRegistrationForm
 from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -18,7 +19,7 @@ def login_view(request):
 		password = form.cleaned_data.get("password")
 		user = authenticate(username=username, password=password)
 		login(request, user)
-		return redirect("details")
+		return redirect("home")
 	context = {"form":form,
 			   "title":title
 	}
@@ -42,8 +43,10 @@ def register_view(request):
 
 	return render(request, "accounts/register_form.html", context)
 
-
 def logout_view(request):
-	logout(request)
-	return redirect("login")
+	if not request.user.is_authenticated():
+		return redirect("login")
+	else:
+		logout(request)
+		return redirect("home")
 	

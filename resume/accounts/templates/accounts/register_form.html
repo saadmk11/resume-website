@@ -1,8 +1,16 @@
+
+{% if user.is_authenticated %}
+<p>{{ user.username }}, You are already Logged in</p>
+    <a href="{% url 'logout' %}">Logout</a>  
+{% else %}
+
 <h1>{{ title }}</h1>
 
 
 <form method="POST" action="" >
 	{% csrf_token %}
 	{{ form.as_p }}
-	<input type="submit" value='{{ title }}'>
+	<input type="submit" value='{{ title }}'> Already Have an Account <a href="{% url 'login' %}">Login</a> 
 </form>
+
+{% endif %}

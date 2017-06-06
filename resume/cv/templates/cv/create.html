@@ -7,12 +7,23 @@
 	{% csrf_token %}
 	<h2>Personal information</h2>
 	{{ personalinfoform.as_p }}<br>
+
 	<h2>Work Experiance</h2>
-	{{ workexperienceform.as_p }}<br>
+	
+	{{ workexperienceformset.management_form }}
+	{% for form in workexperienceformset %}
+	{{ form.as_p }}<br>
+	{% endfor %}
+
 	<h2>Educational Qualification</h2>
-	{{ educationform.as_p }}<br>
+	{{ educationformset.management_form }}
+	{% for form in educationformset %}
+	{{ form.as_p }}<br>
+	{% endfor %}
+
 	<h2>Skills</h2>
 	{{ skillsform.as_p }}
+
 	<input type="submit" value='{{ title }}'>
 </form>
 
