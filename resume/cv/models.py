@@ -30,7 +30,7 @@ class WorkExperience(models.Model):
 	personal_info = models.ForeignKey(PersonalInfo)
 	company_name = models.CharField(max_length=50)
 	job_title = models.CharField(max_length=20)
-	joining_year = models.DateField()
+	joining_year = models.DateField(null=True, blank=True)
 	job_description = models.TextField()
 
 	def __unicode__(self):
@@ -38,9 +38,9 @@ class WorkExperience(models.Model):
 
 class Education(models.Model):
 	personal_info = models.ForeignKey(PersonalInfo)
-	institute_name = models.CharField(max_length=50)
+	institute_name = models.CharField(max_length=50, blank=False)
 	subject = models.CharField(max_length=40)
-	year = models.DateField()
+	year = models.DateField(null=True, blank=True)
 	description = models.TextField()
 
 	def __unicode__(self):

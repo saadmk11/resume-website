@@ -1,7 +1,7 @@
 # from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.forms import formset_factory
+from django.forms import formset_factory, BaseFormSet
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import PersonalInfoForm, WorkExperienceForm, EducationForm, SkillsForm
@@ -48,18 +48,20 @@ def create(request):
 	if not request.user.groups.filter(name='new user').exists():
 		raise Http404
 	else:
-		WorkExperienceFormset = formset_factory(WorkExperienceForm, extra=3,
-												max_num=3, validate_max=True,
-												min_num=3, validate_min=True)
+		class RequiredFormSet(BaseFormSet):
+			def __init__(self, *args, **kwargs):
+				super(RequiredFormSet, self).__init__(*args, **kwargs)
+				for form in self.forms:
+					self.forms[0].empty_permitted = False
 
-		EducationFormset = formset_factory(EducationForm, extra=4,
-												max_num=4, validate_max=True,
-												min_num=4, validate_min=True)
+		EducationFormset = formset_factory(EducationForm, extra=4, max_num=4, formset=RequiredFormSet)
+
+		WorkExperienceFormset = formset_factory(WorkExperienceForm, extra=3, max_num=3, formset=RequiredFormSet)
 
 		title = "Create CV"
 		personalinfoform = PersonalInfoForm(request.POST or None, request.FILES or None)
-		workexperienceformset = WorkExperienceFormset(request.POST or None)
-		educationformset = EducationFormset(request.POST or None)
+		workexperienceformset = WorkExperienceFormset(request.POST or None, prefix='workexperience')
+		educationformset = EducationFormset(request.POST or None, prefix='education')
 		skillsform = SkillsForm(request.POST or None)
 
 		if personalinfoform.is_valid() and workexperienceformset.is_valid() and educationformset.is_valid() and skillsform.is_valid():
@@ -67,20 +69,21 @@ def create(request):
 			instance.user = request.user
 			instance.save()
 			for form in workexperienceformset:
-				workexperience = form.save(commit=False)
-				workexperience.personal_info = instance
-				workexperience.save()
+					workexperience = form.save(commit=False)
+					workexperience.personal_info = instance
+					if workexperience.company_name:
+						workexperience.save()
 			for form in educationformset:
-				education = form.save(commit=False)
-				education.personal_info = instance
-				education.save()
+					education = form.save(commit=False)
+					education.personal_info = instance
+					if education.institute_name:
+						education.save()
 			skills = skillsform.save(commit=False)
 			skills.personal_info = instance
 			skills.save()
 			user = request.user
 			user.groups.clear()
 			return redirect("home")
-
 
 		context = {'personalinfoform': personalinfoform,
 				   'workexperienceformset': workexperienceformset,
@@ -99,35 +102,51 @@ def update(request, username=None):
 		raise Http404
 	else:
 		title = "Update CV"
+		class RequiredFormSet(BaseFormSet):
+			def __init__(self, *args, **kwargs):
+				super(RequiredFormSet, self).__init__(*args, **kwargs)
+				for form in self.forms:
+					self.forms[0].empty_permitted = False
+
+		EducationFormset = formset_factory(EducationForm, extra=4, max_num=4, formset=RequiredFormSet)
+
+		WorkExperienceFormset = formset_factory(WorkExperienceForm, extra=3, max_num=3, formset=RequiredFormSet)
 		user = get_object_or_404(User, username=username)
 		instance = get_object_or_404(PersonalInfo, user=user)
 		personalinfoform = PersonalInfoForm(request.POST or None, request.FILES or None, instance=instance)
-		id = instance.id
-		instance = get_object_or_404(WorkExperience, id=id)
-		workexperienceform = WorkExperienceForm(request.POST or None, instance=instance)
-		instance = get_object_or_404(Education, id=id)
-		educationform = EducationForm(request.POST or None, instance=instance)
-		instance = get_object_or_404(Skills, id=id)
+		personal_info_id = instance.id
+		instance = WorkExperience.objects.filter(personal_info_id=personal_info_id)
+		workexperienceformset = WorkExperienceFormset(request.POST or None, prefix='workexperience', instance=instance)
+		instance = Education.objects.filter(personal_info_id=personal_info_id)
+		educationformset = EducationFormset(request.POST or None, prefix='education', instance=instance)
+		instance = Skills.objects.filter(personal_info_id=personal_info_id)
 		skillsform = SkillsForm(request.POST or None, instance=instance)
 
-		if personalinfoform.is_valid() and workexperienceform.is_valid() and educationform.is_valid() and skillsform.is_valid():
+
+		if personalinfoform.is_valid() and workexperienceformset.is_valid() and educationformset.is_valid() and skillsform.is_valid():
 			instance = personalinfoform.save(commit=False)
 			instance.user = request.user
 			instance.save()
-			workexperience = workexperienceform.save(commit=False)
-			workexperience.personal_info = instance
-			workexperience.save()
-			education = educationform.save(commit=False)
-			education.personal_info = instance
-			education.save()
+			for form in workexperienceformset:
+					workexperience = form.save(commit=False)
+					workexperience.personal_info = instance
+					if workexperience.company_name:
+						workexperience.save()
+			for form in educationformset:
+					education = form.save(commit=False)
+					education.personal_info = instance
+					if education.institute_name:
+						education.save()
 			skills = skillsform.save(commit=False)
 			skills.personal_info = instance
 			skills.save()
+			user = request.user
+			user.groups.clear()
 			return redirect("home")
 
 		context = {'personalinfoform': personalinfoform,
-				   'workexperienceform': workexperienceform,
-				   'educationform': educationform,
+				   'workexperienceformset': workexperienceformset,
+				   'educationformset': educationformset,
 				   'skillsform': skillsform,
 				   'title': title
 					}

@@ -11,13 +11,13 @@ class PersonalInfoForm(forms.ModelForm):
 		exclude = ["user", "height_field", "width_field",]
 
 class WorkExperienceForm(forms.ModelForm):
-	joining_year = forms.DateField(widget=SelectDateWidget(years=range(1960, 2018))) 
+	# joining_year = forms.DateField(widget=SelectDateWidget(years=range(1960, 2018))) 
 	class Meta:
 		model = WorkExperience
 		exclude = ["personal_info"]
 
 class EducationForm(forms.ModelForm):
-	year = forms.DateField(widget=SelectDateWidget(years=range(1960, 2018))) 
+	# year = forms.DateField(widget=SelectDateWidget(years=range(1960, 2018))) 
 	class Meta:
 		model = Education
 		exclude = ["personal_info"]
