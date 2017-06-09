@@ -24,34 +24,34 @@ class PersonalInfo(models.Model):
 	width_field = models.IntegerField(default=600)
 
 	def __unicode__(self):
-		return self.first_name
+		return self.user.username
 
 class WorkExperience(models.Model):
-	personal_info = models.ForeignKey(PersonalInfo)
+	user = models.ForeignKey(User)
 	company_name = models.CharField(max_length=50)
 	job_title = models.CharField(max_length=20)
 	joining_year = models.DateField(null=True, blank=True)
 	job_description = models.TextField()
 
 	def __unicode__(self):
-		return self.personal_info.first_name
-
+		return self.user.username
+		
 class Education(models.Model):
-	personal_info = models.ForeignKey(PersonalInfo)
+	user = models.ForeignKey(User)
 	institute_name = models.CharField(max_length=50, blank=False)
 	subject = models.CharField(max_length=40)
 	year = models.DateField(null=True, blank=True)
 	description = models.TextField()
 
 	def __unicode__(self):
-		return self.personal_info.first_name
+		return self.user.username
 
 
 class Skills(models.Model):
-	personal_info = models.ForeignKey(PersonalInfo)
+	user = models.ForeignKey(User)
+
 	language_skills = models.CharField(max_length=200, blank=True, help_text="Sparate languages by comma")
 	other_skills = models.CharField(max_length=200, blank=True, help_text="Sparate Skills by comma")
-
 	def __unicode__(self):
-		return self.personal_info.first_name
+		return self.user.username
 		

@@ -20,6 +20,7 @@ class Migration(migrations.Migration):
                 ('subject', models.CharField(max_length=40)),
                 ('year', models.DateField(null=True, blank=True)),
                 ('description', models.TextField()),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -48,7 +49,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('language_skills', models.CharField(help_text=b'Sparate languages by comma', max_length=200, blank=True)),
                 ('other_skills', models.CharField(help_text=b'Sparate Skills by comma', max_length=200, blank=True)),
-                ('personal_info', models.ForeignKey(to='cv.PersonalInfo')),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -59,12 +60,7 @@ class Migration(migrations.Migration):
                 ('job_title', models.CharField(max_length=20)),
                 ('joining_year', models.DateField(null=True, blank=True)),
                 ('job_description', models.TextField()),
-                ('personal_info', models.ForeignKey(to='cv.PersonalInfo')),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
-        ),
-        migrations.AddField(
-            model_name='education',
-            name='personal_info',
-            field=models.ForeignKey(to='cv.PersonalInfo'),
         ),
     ]

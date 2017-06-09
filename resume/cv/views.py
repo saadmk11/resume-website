@@ -21,9 +21,9 @@ def home(request, username=None):
 		user = get_object_or_404(User, username=username)
 
 	personalinfo = PersonalInfo.objects.filter(user=user)
-	workexperience_detail = WorkExperience.objects.filter(personal_info=personalinfo)
-	education_detail = Education.objects.filter(personal_info=personalinfo)
-	skills_detail = Skills.objects.filter(personal_info=personalinfo)
+	workexperience_detail = WorkExperience.objects.filter(user=user)
+	education_detail = Education.objects.filter(user=user)
+	skills_detail = Skills.objects.filter(user=user)
 	can_update = request.user.groups.filter(name='new user').exists()
 
 
@@ -65,23 +65,24 @@ def create(request):
 		skillsform = SkillsForm(request.POST or None)
 
 		if personalinfoform.is_valid() and workexperienceformset.is_valid() and educationformset.is_valid() and skillsform.is_valid():
-			instance = personalinfoform.save(commit=False)
-			instance.user = request.user
-			instance.save()
+
+			user = request.user
+			personalinfo = personalinfoform.save(commit=False)
+			personalinfo.user = user
+			personalinfo.save()
 			for form in workexperienceformset:
 					workexperience = form.save(commit=False)
-					workexperience.personal_info = instance
+					workexperience.user = user
 					if workexperience.company_name:
 						workexperience.save()
 			for form in educationformset:
 					education = form.save(commit=False)
-					education.personal_info = instance
+					education.user = user
 					if education.institute_name:
 						education.save()
 			skills = skillsform.save(commit=False)
-			skills.personal_info = instance
+			skills.user = user
 			skills.save()
-			user = request.user
 			user.groups.clear()
 			return redirect("home")
 
@@ -102,8 +103,10 @@ def update(request, username=None):
 		raise Http404
 	else:
 		title = "Update CV"
+		
 		class RequiredFormSet(BaseFormSet):
 			def __init__(self, *args, **kwargs):
+				instance = kwargs.pop('instance', None)
 				super(RequiredFormSet, self).__init__(*args, **kwargs)
 				for form in self.forms:
 					self.forms[0].empty_permitted = False
@@ -111,36 +114,36 @@ def update(request, username=None):
 		EducationFormset = formset_factory(EducationForm, extra=4, max_num=4, formset=RequiredFormSet)
 
 		WorkExperienceFormset = formset_factory(WorkExperienceForm, extra=3, max_num=3, formset=RequiredFormSet)
+
 		user = get_object_or_404(User, username=username)
 		instance = get_object_or_404(PersonalInfo, user=user)
 		personalinfoform = PersonalInfoForm(request.POST or None, request.FILES or None, instance=instance)
-		personal_info_id = instance.id
-		instance = WorkExperience.objects.filter(personal_info_id=personal_info_id)
-		workexperienceformset = WorkExperienceFormset(request.POST or None, prefix='workexperience', instance=instance)
-		instance = Education.objects.filter(personal_info_id=personal_info_id)
-		educationformset = EducationFormset(request.POST or None, prefix='education', instance=instance)
-		instance = Skills.objects.filter(personal_info_id=personal_info_id)
+		instance = WorkExperience.objects.filter(user=user)
+		workexperienceformset = WorkExperienceFormset(request.POST or None, instance=instance)
+		instance = Education.objects.filter(user=user)
+		educationformset = EducationFormset(request.POST or None, instance=instance)
+		instance = Skills.objects.get(user=user)
 		skillsform = SkillsForm(request.POST or None, instance=instance)
 
-
 		if personalinfoform.is_valid() and workexperienceformset.is_valid() and educationformset.is_valid() and skillsform.is_valid():
-			instance = personalinfoform.save(commit=False)
-			instance.user = request.user
+
+			user = request.user
+			personalinfo = personalinfoform.save(commit=False)
+			personalinfo.user = user
 			instance.save()
 			for form in workexperienceformset:
 					workexperience = form.save(commit=False)
-					workexperience.personal_info = instance
+					workexperience.user = user
 					if workexperience.company_name:
 						workexperience.save()
 			for form in educationformset:
 					education = form.save(commit=False)
-					education.personal_info = instance
+					education.user = user
 					if education.institute_name:
 						education.save()
 			skills = skillsform.save(commit=False)
-			skills.personal_info = instance
+			skills.user = user
 			skills.save()
-			user = request.user
 			user.groups.clear()
 			return redirect("home")
 
