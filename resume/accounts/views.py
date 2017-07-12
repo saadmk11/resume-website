@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from .forms import UserLoginForm, UserRegistrationForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 
@@ -37,6 +38,7 @@ def register_view(request):
 		user.groups.add(Group.objects.get(name='new user'))
 		new_user = authenticate(username=user.username, password=password)
 		login(request, new_user)
+		messages.success(request, "Account created")
 		return redirect("create")
 
 	context = {"title":title, "form":form}
@@ -45,6 +47,7 @@ def register_view(request):
 
 def logout_view(request):
 	if not request.user.is_authenticated():
+		messages.error(request, "You must be logged in to do that!")
 		return redirect("login")
 	else:
 		logout(request)
